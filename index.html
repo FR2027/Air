@@ -395,7 +395,7 @@
                     const percent = Math.round((offset / selectedFile.size) * 100);
                     
                     document.getElementById('sendProgressBar').style.width = percent + '%';
-                    document.getElementById('sendProgressPercent.innerText = percent + '%'';
+                    document.getElementById('sendProgressPercent').innerText = percent + '%';
                     document.getElementById('sendProgressStatus').innerText = `傳輸中: ${formatBytes(offset)} / ${formatBytes(selectedFile.size)}`;
 
                     if (offset < selectedFile.size) {
