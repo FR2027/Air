@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code 離線檔案傳輸</title>
+    <!-- 引入 Tailwind CSS 樣式 -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- 引入 QRCode 生成函式庫 -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <!-- 引入 jsQR 掃描函式庫 -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center justify-between p-4">
+
+    <!-- 頁首 -->
+    <header class="w-full max-w-md text-center py-4">
+        <h1 class="text-2xl font-bold tracking-wider text-emerald-400">⚡ 離線 QR 檔案傳輸</h1>
+        <p class="text-xs text-slate-400 mt-1">透過動態 QR Code 在裝置間高速傳輸檔案</p>
+    </header>
+
+    <!-- 主內容區 -->
+    <main class="w-full max-w-md flex flex-col gap-4">
+        
+        <!-- 功能切換按鈕 -->
+        <div class="flex bg-slate-800 p-1 rounded-xl shadow-inner">
+            <button id="tabSendBtn" onclick="switchTab('send')" class="flex-1 py-2 text-sm font-semibold rounded-lg bg-emerald-600 text-white transition">傳送端 (Sender)</button>
+            <button id="tabRecvBtn" onclick="switchTab('recv')" class="flex-1 py-2 text-sm font-semibold rounded-lg text-slate-400 transition">接收端 (Receiver)</button>
+        </div>
+
+        <!-- 傳送端介面 -->
+        <div id="sendPanel" class="flex flex-col gap-4 bg-slate-800/50 border border-slate-700/50 p-5 rounded-2xl shadow-xl">
+            <div>
+                <label class="block text-sm font-medium mb-2 text-slate-300">選擇要傳送的檔案</label>
+                <input type="file" id="fileInput" class="w-full text-sm text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-emerald-500 file:text-slate-950 hover:file:bg-emerald-400 cursor-pointer">
+            </div>
+
+            <!-- QR Code 播放畫面 -->
+            <div class="flex flex-col items-center justify-center bg-white p-4 rounded-xl aspect-square">
+                <canvas id="qrCanvas" class="w-full h-full object-contain"></canvas>
+            </div>
+
+            <div class="flex justify-between items-center text-xs text-slate-400">
+                <span id="statusText">等待選擇檔案...</span>
+                <span id="fpsText">速度: 5 FPS</span>
+            </div>
+
+            <div class="flex gap-2">
+                <button id="startSendBtn" onclick="startSending()" disabled class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 disabled:bg-slate-700 disabled:text-slate-500 font-bold rounded-xl transition cursor-pointer">開始播放傳送</button>
+                <button onclick="stopSending()" class="px-4 py-3 bg-rose-600/30 hover:bg-rose-600/50 text-rose-300 font-bold rounded-xl transition cursor-pointer">停止</button>
+            </div>
+        </div>
+
+        <!-- 接收端介面 -->
+        <div id="recvPanel" class="hidden flex flex-col gap-4 bg-slate-800/50 border border-slate-700/50 p-5 rounded-2xl shadow-xl">
+            <div class="relative bg-black rounded-xl overflow-hidden aspect-square flex items-center justify-center">
+                <video id="videoElement" autoplay playsinline class="w-full h-full object-cover"></video>
+                <canvas id="scanCanvas" class="hidden"></canvas>
+                <div class="absolute inset-0 border-2 border-emerald-500/40 rounded-xl pointer-events-none"></div>
+            </div>
+
+            <!-- 進度條 -->
+            <div class="flex flex-col gap-1">
+                <div class="flex justify-between text-xs text-slate-400">
+                    <span id="recvStatus">相機準備就緒</span>
+                    <span id="progressText">0%</span>
+                </div>
+                <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
+                    <div id="progressBar" class="bg-emerald-500 h-full w-0 transition-all duration-200"></div>
+                </div>
+            </div>
+
+            <div class="flex gap-2">
+                <button onclick="startCamera()" class="flex-1 py-3 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl transition cursor-pointer">啟動相機掃描</button>
+                <button onclick="stopCamera()" class="px-4 py-3 bg-slate-700 hover:bg-slate-600 font-bold rounded-xl transition cursor-pointer">關閉相機</button>
+            </div>
+            
+            <!-- 下載按鈕 (完成後顯示) -->
+            <div id="downloadArea" class="hidden">
+                <a id="downloadLink" class="block w-full py-3 bg-sky-600 hover:bg-sky-500 text-center font-bold rounded-xl transition">下載接收到的檔案</a>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- 頁尾 -->
+    <footer class="text-xs text-slate-500 py-2">
+        Powered by GitHub Pages & Web APIs
+    </footer>
+
+    <!-- 核心邏輯 JavaScript -->
+    <script>
+        let fileChunks = [];
+        let currentChunkIndex = 0;
+        let sendInterval = null;
+        let videoStream = null;
+        let scanInterval = null;
+        
+        // 接收端的狀態儲存
+        let receivedChunks = {};
+        let totalChunks = 0;
+        let fileName = "file";
+        let fileType = "application/octet-stream";
+        let isCompleted = false;
+
+        // 頁籤切換
+        function switchTab(tab) {
+            const sendBtn = document.getElementById('tabSendBtn');
+            const recvBtn = document.getElementById('tabRecvBtn');
+            const sendPanel = document.getElementById('sendPanel');
+            const recvPanel = document.getElementById('recvPanel');
+
+            if (tab === 'send') {
+                sendBtn.className = "flex-1 py-2 text-sm font-semibold rounded-lg bg-emerald-600 text-white transition";
+                recvBtn.className = "flex-1 py-2 text-sm font-semibold rounded-lg text-slate-400 transition";
+                sendPanel.classList.remove('hidden');
+                recvPanel.classList.add('hidden');
+                stopCamera();
+            } else {
+                recvBtn.className = "flex-1 py-2 text-sm font-semibold rounded-lg bg-emerald-600 text-white transition";
+                sendBtn.className = "flex-1 py-2 text-sm font-semibold rounded-lg text-slate-400 transition";
+                recvPanel.classList.remove('hidden');
+                sendPanel.classList.add('hidden');
+                stopSending();
+            }
+        }
+
+        // --- 傳送端邏輯 ---
+        const CHUNK_SIZE = 400; // 每個 QR Code 帶有的位元組大小 (保持適中以確保相機好讀取)
+
+        document.getElementById('fileInput').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            document.getElementById('statusText').innerText = `正在讀取檔案: ${file.name}...`;
+            const buffer = await file.arrayBuffer();
+            const bytes = new Uint8Array(buffer);
+            
+            fileChunks = [];
+            totalChunks = Math.ceil(bytes.length / CHUNK_SIZE);
+            fileName = file.name;
+            fileType = file.type || "application/octet-stream";
+
+            // 切割檔案並轉成 Base64 封包
+            for (let i = 0; i < totalChunks; i++) {
+                const chunkData = bytes.slice(i * CHUNK_SIZE, (i + 1) * CHUNK_SIZE);
+                // 為了安全傳輸，將 binary 轉為 base64 放到 JSON 中
+                const chunkObj = {
+                    i: i,          // 當前序號
+                    t: totalChunks,// 總數
+                    n: fileName,   // 檔名
+                    m: fileType,   // 檔案類型
+                    d: btoa(String.fromCharCode.apply(null, chunkData)) // 內容 Base64
+                };
+                fileChunks.push(JSON.stringify(chunkObj));
+            }
+
+            document.getElementById('statusText').innerText = `檔案準備完成，共 ${totalChunks} 個影格。`;
+            document.getElementById('startSendBtn').disabled = false;
+        });
+
+        function startSending() {
+            if (fileChunks.length === 0) return;
+            stopSending();
+            currentChunkIndex = 0;
+
+            // 每秒播放 5 張圖 (可依照相機掃描能力微調，如 5~10 FPS)
+            const fps = 5; 
+            sendInterval = setInterval(() => {
+                const currentData = fileChunks[currentChunkIndex];
+                const canvas = document.getElementById('qrCanvas');
+                
+                QRCode.toCanvas(canvas, currentData, { errorCorrectionLevel: 'L', width: 300 }, function (error) {
+                    if (error) console.error(error);
+                });
+
+                document.getElementById('statusText').innerText = `正在廣播影格: ${currentChunkIndex + 1} / ${totalChunks}`;
+                
+                currentChunkIndex = (currentChunkIndex + 1) % fileChunks.length;
+            }, 1000 / fps);
+        }
+
+        function stopSending() {
+            if (sendInterval) {
+                clearInterval(sendInterval);
+                sendInterval = null;
+            }
+        }
+
+        // --- 接收端邏輯 ---
+        async function startCamera() {
+            try {
+                receivedChunks = {};
+                isCompleted = false;
+                document.getElementById('downloadArea').classList.add('hidden');
+                
+                const video = document.getElementById('videoElement');
+                videoStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } } 
+                });
+                video.srcObject = videoStream;
+                video.play();
+
+                document.getElementById('recvStatus').innerText = "正在掃描 QR 碼...";
+                
+                // 開始連續畫面擷取與解碼
+                scanInterval = setInterval(scanQRCodeFrame, 100); // 每 100ms 掃描一次
+            } catch (err) {
+                alert("無法開啟相機，請確認是否有給予相機權限或使用 HTTPS。");
+                console.error(err);
+            }
+        }
+
+        function stopCamera() {
+            if (scanInterval) {
+                clearInterval(scanInterval);
+                scanInterval = null;
+            }
+            if (videoStream) {
+                videoStream.getTracks().forEach(track => track.stop());
+                videoStream = null;
+            }
+        }
+
+        function scanQRCodeFrame() {
+            const video = document.getElementById('videoElement');
+            const canvas = document.getElementById('scanCanvas');
+            if (video.readyState !== video.HAVE_ENOUGH_DATA) return;
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d', { willReadFrequently: true });
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+            if (code && !isCompleted) {
+                try {
+                    const data = JSON.parse(code.data);
+                    if (data.i !== undefined && data.t !== undefined && data.d) {
+                        if (!receivedChunks[data.i]) {
+                            receivedChunks[data.i] = data.d;
+                            totalChunks = data.t;
+                            fileName = data.n;
+                            fileType = data.m;
+
+                            const receivedCount = Object.keys(receivedChunks).length;
+                            const percent = Math.round((receivedCount / totalChunks) * 100);
+                            
+                            document.getElementById('progressBar').style.width = percent + '%';
+                            document.getElementById('progressText').innerText = percent + '%';
+                            document.getElementById('recvStatus').innerText = `已接收: ${receivedCount} / ${totalChunks}`;
+
+                            // 檢查是否收齊
+                            if (receivedCount === totalChunks) {
+                                assembleFile();
+                            }
+                        }
+                    }
+                } catch (e) {
+                    // 解析失敗代表不是本程式的 QR Code，忽略即可
+                }
+            }
+        }
+
+        function assembleFile() {
+            isCompleted = true;
+            stopCamera();
+            document.getElementById('recvStatus').innerText = "🎉 檔案接收成功！";
+
+            // 組裝二進位資料
+            let allBytesArray = [];
+            for (let i = 0; i < totalChunks; i++) {
+                const rawBinary = atob(receivedChunks[i]);
+                const bytes = new Uint8Array(rawBinary.length);
+                for (let j = 0; j < rawBinary.length; j++) {
+                    bytes[j] = rawBinary.charCodeAt(j);
+                }
+                allBytesArray.push(bytes);
+            }
+
+            const blob = new Blob(allBytesArray, { type: fileType });
+            const url = URL.createObjectURL(blob);
+            
+            const downloadLink = document.getElementById('downloadLink');
+            downloadLink.href = url;
+            downloadLink.download = fileName;
+            document.getElementById('downloadArea').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
