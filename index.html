@@ -16,8 +16,8 @@
             50% { transform: translateY(-10px) scale(1.02); }
         }
         @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 25px rgba(16, 185, 129, 0.15), inset 0 0 15px rgba(255, 255, 255, 0.05); }
-            50% { box-shadow: 0 0 50px rgba(16, 185, 129, 0.35), inset 0 0 25px rgba(255, 255, 255, 0.1); }
+            0%, 100% { box-shadow: 0 0 25px rgba(59, 130, 246, 0.15), inset 0 0 15px rgba(255, 255, 255, 0.05); }
+            50% { box-shadow: 0 0 50px rgba(59, 130, 246, 0.35), inset 0 0 25px rgba(255, 255, 255, 0.1); }
         }
         .liquid-glass {
             background: rgba(15, 23, 42, 0.65);
@@ -45,30 +45,30 @@
             background: rgba(15, 23, 42, 0.4);
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(52, 211, 153, 0.3);
+            background: rgba(59, 130, 246, 0.3);
             border-radius: 3px;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: rgba(52, 211, 153, 0.6);
+            background: rgba(59, 130, 246, 0.6);
         }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-emerald-500 selection:text-slate-950 font-sans antialiased overflow-x-hidden">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-blue-500 selection:text-slate-950 font-sans antialiased overflow-x-hidden" oncontextmenu="return false;">
 
-    <!-- 動態流光背景 -->
-    <div class="fixed top-[-10%] left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-gradient-to-tr from-emerald-600/20 via-teal-500/15 to-cyan-500/5 blur-[140px] pointer-events-none rounded-full floating-orb"></div>
-    <div class="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-emerald-500/10 blur-[160px] pointer-events-none rounded-full"></div>
+    <!-- 動態流光背景 (藍色科技主題) -->
+    <div class="fixed top-[-10%] left-1/2 -translate-x-1/2 w-[800px] h-[450px] bg-gradient-to-tr from-blue-600/20 via-indigo-500/15 to-cyan-500/5 blur-[140px] pointer-events-none rounded-full floating-orb"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-500/10 blur-[160px] pointer-events-none rounded-full"></div>
 
     <!-- 頂部導航列 -->
     <header class="w-full border-b border-white/5 liquid-glass sticky top-0 z-50">
         <div class="max-w-4xl mx-auto px-6 h-20 flex items-center justify-between">
             <div class="flex items-center gap-3.5">
-                <div class="w-12 h-12 rounded-2xl p-0.5 bg-gradient-to-tr from-emerald-500 to-teal-300 shadow-lg shadow-emerald-900/40 flex items-center justify-center overflow-hidden">
+                <div class="w-12 h-12 rounded-2xl p-0.5 bg-gradient-to-tr from-blue-500 to-cyan-300 shadow-lg shadow-blue-900/40 flex items-center justify-center overflow-hidden">
                     <img src="https://i.ibb.co/TqntYvwV/Background-Eraser-20260826-155325630.jpg" alt="FR Air Logo" class="w-full h-full object-cover rounded-[14px]">
                 </div>
                 <div>
-                    <h1 class="font-black text-xl tracking-tight bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300 bg-clip-text text-transparent">FR Air</h1>
-                    <p class="text-[10px] text-slate-400 font-semibold tracking-widest uppercase">FR 高速等案傳輸網站</p>
+                    <h1 class="font-black text-xl tracking-tight bg-gradient-to-r from-blue-400 via-indigo-300 to-cyan-300 bg-clip-text text-transparent">FR Air</h1>
+                    <p class="text-[10px] text-slate-400 font-semibold tracking-widest uppercase">FR 高速檔案傳輸網站</p>
                 </div>
             </div>
             <div class="flex items-center gap-3">
@@ -85,7 +85,7 @@
 
         <!-- 模式切換標籤 -->
         <div class="grid grid-cols-2 gap-2 liquid-glass p-2 rounded-2xl shadow-2xl">
-            <button onclick="switchTab('send')" id="tabSend" class="py-3.5 rounded-xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow-lg shadow-emerald-950/50 cursor-pointer">
+            <button onclick="switchTab('send')" id="tabSend" class="py-3.5 rounded-xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-slate-950 shadow-lg shadow-blue-950/50 cursor-pointer">
                 <i data-lucide="upload-cloud" class="w-4 h-4"></i>
                 傳送檔案 (Sender)
             </button>
@@ -100,19 +100,19 @@
             <div class="liquid-glass rounded-3xl p-8 shadow-2xl glow-card flex flex-col gap-6">
                 <div class="flex items-center justify-between">
                     <h2 class="text-base font-bold text-slate-200 flex items-center gap-2.5">
-                        <i data-lucide="sparkles" class="w-5 h-5 text-emerald-400"></i>
+                        <i data-lucide="sparkles" class="w-5 h-5 text-blue-400"></i>
                         拖曳或選擇檔案（支援 1GB+ 大型檔案）
                     </h2>
-                    <span class="text-xs text-emerald-400/80 font-mono bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">支援 1GB+</span>
+                    <span class="text-xs text-blue-400/80 font-mono bg-blue-500/10 px-2.5 py-1 rounded-lg border border-blue-500/20">支援 1GB+</span>
                 </div>
 
                 <!-- 檔案上傳拖曳區 -->
-                <label id="dropZone" class="border-2 border-dashed border-slate-700/80 hover:border-emerald-500 bg-slate-950/30 hover:bg-emerald-950/10 rounded-2xl p-10 flex flex-col items-center justify-center gap-4 transition-all duration-300 cursor-pointer group">
-                    <div class="w-16 h-16 rounded-2xl bg-slate-900/80 group-hover:bg-emerald-500/20 group-hover:scale-110 flex items-center justify-center transition-all duration-300 shadow-xl">
-                        <i data-lucide="folder-open" class="w-7 h-7 text-slate-400 group-hover:text-emerald-400 transition-colors"></i>
+                <label id="dropZone" class="border-2 border-dashed border-slate-700/80 hover:border-blue-500 bg-slate-950/30 hover:bg-blue-950/10 rounded-2xl p-10 flex flex-col items-center justify-center gap-4 transition-all duration-300 cursor-pointer group">
+                    <div class="w-16 h-16 rounded-2xl bg-slate-900/80 group-hover:bg-blue-500/20 group-hover:scale-110 flex items-center justify-center transition-all duration-300 shadow-xl">
+                        <i data-lucide="folder-open" class="w-7 h-7 text-slate-400 group-hover:text-blue-400 transition-colors"></i>
                     </div>
                     <div class="text-center">
-                        <p class="text-sm font-bold text-slate-200 group-hover:text-emerald-300 transition-colors">點擊選擇檔案 或 將檔案拖曳至此</p>
+                        <p class="text-sm font-bold text-slate-200 group-hover:text-blue-300 transition-colors">點擊選擇檔案 或 將檔案拖曳至此</p>
                         <p class="text-xs text-slate-400 mt-1">完美支援 1GB 以上大型影片、壓縮檔與高畫質照片直傳</p>
                     </div>
                     <input type="file" id="fileInput" class="hidden">
@@ -121,8 +121,8 @@
                 <!-- 已選檔案預覽 -->
                 <div id="filePreview" class="hidden flex items-center justify-between p-4 liquid-glass-card rounded-2xl border border-white/5">
                     <div class="flex items-center gap-3.5 overflow-hidden">
-                        <div class="w-11 h-11 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0 border border-emerald-500/20">
-                            <i data-lucide="file-check" class="w-5 h-5 text-emerald-400"></i>
+                        <div class="w-11 h-11 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0 border border-blue-500/20">
+                            <i data-lucide="file-check" class="w-5 h-5 text-blue-400"></i>
                         </div>
                         <div class="overflow-hidden">
                             <p id="fileName" class="text-sm font-bold text-slate-200 truncate"></p>
@@ -138,14 +138,14 @@
                 <div class="flex flex-col gap-3 pt-4 border-t border-white/5">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">傳輸金鑰代碼</span>
-                        <button onclick="generateNewRoom()" class="text-xs text-emerald-400 hover:text-emerald-300 flex items-center gap-1 font-semibold cursor-pointer">
+                        <button onclick="generateNewRoom()" class="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-1 font-semibold cursor-pointer">
                             <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> 重新產生
                         </button>
                     </div>
                     <div class="flex gap-3">
                         <div class="flex-1 bg-slate-950/60 border border-white/10 rounded-2xl px-5 py-3.5 flex items-center justify-between shadow-inner">
                             <span class="text-xs text-slate-500 font-mono">FR-KEY</span>
-                            <span id="roomCodeDisplay" class="text-2xl font-black tracking-[0.3em] text-emerald-400 font-mono">------</span>
+                            <span id="roomCodeDisplay" class="text-2xl font-black tracking-[0.3em] text-blue-400 font-mono">------</span>
                         </div>
                         <button onclick="copyRoomCode()" class="px-6 bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-bold rounded-2xl text-xs transition-all flex items-center gap-2 cursor-pointer shadow-lg border border-white/10">
                             <i data-lucide="copy" class="w-4 h-4"></i> 複製
@@ -157,14 +157,14 @@
                 <div id="sendProgressContainer" class="hidden flex flex-col gap-2.5 pt-2">
                     <div class="flex justify-between text-xs font-medium">
                         <span id="sendProgressStatus" class="text-slate-300">高速傳輸中...</span>
-                        <span id="sendProgressPercent" class="text-emerald-400 font-mono font-bold">0%</span>
+                        <span id="sendProgressPercent" class="text-blue-400 font-mono font-bold">0%</span>
                     </div>
                     <div class="w-full bg-slate-950/80 h-3.5 rounded-full overflow-hidden p-0.5 border border-white/10">
-                        <div id="sendProgressBar" class="bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 h-full w-0 rounded-full transition-all duration-150 shadow-lg shadow-emerald-500/50"></div>
+                        <div id="sendProgressBar" class="bg-gradient-to-r from-blue-500 via-indigo-400 to-cyan-400 h-full w-0 rounded-full transition-all duration-150 shadow-lg shadow-blue-500/50"></div>
                     </div>
                 </div>
 
-                <button id="startSendBtn" onclick="startHosting()" disabled class="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 disabled:from-slate-800 disabled:to-slate-800 disabled:text-slate-600 text-slate-950 font-black rounded-2xl transition-all shadow-xl shadow-emerald-950/50 flex items-center justify-center gap-2.5 cursor-pointer text-base">
+                <button id="startSendBtn" onclick="startHosting()" disabled class="w-full py-4 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-400 hover:to-cyan-400 disabled:from-slate-800 disabled:to-slate-800 disabled:text-slate-600 text-slate-950 font-black rounded-2xl transition-all shadow-xl shadow-blue-950/50 flex items-center justify-center gap-2.5 cursor-pointer text-base">
                     <i data-lucide="radio" class="w-5 h-5"></i> 啟動 FR Air 高速傳輸
                 </button>
             </div>
@@ -175,35 +175,35 @@
             <div class="liquid-glass rounded-3xl p-8 shadow-2xl flex flex-col gap-6">
                 <div class="flex items-center justify-between">
                     <h2 class="text-base font-bold text-slate-200 flex items-center gap-2.5">
-                        <i data-lucide="zap" class="w-5 h-5 text-emerald-400"></i>
+                        <i data-lucide="zap" class="w-5 h-5 text-blue-400"></i>
                         輸入 FR 傳輸代碼接收 1GB+ 檔案
                     </h2>
-                    <span class="text-xs text-emerald-400/80 font-mono bg-emerald-500/10 px-2.5 py-1 rounded-lg border border-emerald-500/20">FR科技</span>
+                    <span class="text-xs text-blue-400/80 font-mono bg-blue-500/10 px-2.5 py-1 rounded-lg border border-blue-500/20">FR科技</span>
                 </div>
 
                 <div class="flex flex-col gap-3">
                     <label class="text-xs font-semibold text-slate-400 uppercase tracking-wider">輸入 6 位數安全代碼</label>
-                    <input type="text" id="inputRoomCode" maxlength="6" placeholder="849201" class="w-full py-4 px-5 bg-slate-950/60 border border-white/10 rounded-2xl text-center text-3xl font-black tracking-[0.5em] text-emerald-400 font-mono focus:outline-none focus:border-emerald-500 transition-all shadow-inner">
+                    <input type="text" id="inputRoomCode" maxlength="6" placeholder="849201" class="w-full py-4 px-5 bg-slate-950/60 border border-white/10 rounded-2xl text-center text-3xl font-black tracking-[0.5em] text-blue-400 font-mono focus:outline-none focus:border-blue-500 transition-all shadow-inner">
                 </div>
 
                 <!-- 接收進度條 -->
                 <div id="recvProgressContainer" class="hidden flex flex-col gap-2.5 pt-2">
                     <div class="flex justify-between text-xs font-medium">
                         <span id="recvProgressStatus" class="text-slate-300">接收並解密中...</span>
-                        <span id="recvProgressPercent" class="text-emerald-400 font-mono font-bold">0%</span>
+                        <span id="recvProgressPercent" class="text-blue-400 font-mono font-bold">0%</span>
                     </div>
                     <div class="w-full bg-slate-950/80 h-3.5 rounded-full overflow-hidden p-0.5 border border-white/10">
-                        <div id="recvProgressBar" class="bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-400 h-full w-0 rounded-full transition-all duration-150 shadow-lg shadow-emerald-500/50"></div>
+                        <div id="recvProgressBar" class="bg-gradient-to-r from-blue-500 via-indigo-400 to-cyan-400 h-full w-0 rounded-full transition-all duration-150 shadow-lg shadow-blue-500/50"></div>
                     </div>
                 </div>
 
-                <button onclick="connectAndReceive()" class="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black rounded-2xl transition-all shadow-xl shadow-emerald-950/50 flex items-center justify-center gap-2.5 cursor-pointer text-base">
+                <button onclick="connectAndReceive()" class="w-full py-4 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-400 hover:to-cyan-400 text-slate-950 font-black rounded-2xl transition-all shadow-xl shadow-blue-950/50 flex items-center justify-center gap-2.5 cursor-pointer text-base">
                     <i data-lucide="download" class="w-5 h-5"></i> 連線並高速接收
                 </button>
 
                 <!-- 下載完成區 -->
-                <div id="recvSuccessArea" class="hidden flex flex-col items-center justify-center gap-4 p-6 bg-emerald-950/30 border border-emerald-500/30 rounded-2xl text-center backdrop-blur-md">
-                    <div class="w-14 h-14 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400 shadow-lg shadow-emerald-900/50">
+                <div id="recvSuccessArea" class="hidden flex flex-col items-center justify-center gap-4 p-6 bg-blue-950/30 border border-blue-500/30 rounded-2xl text-center backdrop-blur-md">
+                    <div class="w-14 h-14 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 shadow-lg shadow-blue-900/50">
                         <i data-lucide="check" class="w-7 h-7"></i>
                     </div>
                     <div>
@@ -221,7 +221,7 @@
         <div class="liquid-glass rounded-2xl p-4 flex flex-col gap-2 shadow-xl">
             <div class="flex items-center justify-between text-xs text-slate-400 font-mono">
                 <span class="flex items-center gap-2 font-bold text-slate-300">
-                    <i data-lucide="terminal" class="w-3.5 h-3.5 text-emerald-400"></i> FR Air 傳送日誌
+                    <i data-lucide="terminal" class="w-3.5 h-3.5 text-blue-400"></i> FR Air 傳送日誌
                 </span>
                 <button onclick="clearLogs()" class="hover:text-slate-200 cursor-pointer">清除日誌</button>
             </div>
@@ -231,6 +231,12 @@
         </div>
 
     </main>
+
+    <!-- 懸浮按鈕：FR 10大網站 -->
+    <a href="https://fr2027.github.io/FR" target="_blank" class="fixed bottom-6 right-6 z-50 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-full shadow-2xl shadow-blue-600/50 flex items-center gap-2 border border-white/20 transition-all hover:scale-105 cursor-pointer backdrop-blur-md">
+        <i data-lucide="globe" class="w-4 h-4 text-cyan-300 animate-spin" style="animation-duration: 8s;"></i>
+        <span>FR 10大網站</span>
+    </a>
 
     <!-- 頁尾 -->
     <footer class="w-full border-t border-white/5 py-6 text-center text-xs text-slate-500">
@@ -242,6 +248,24 @@
     <script>
         lucide.createIcons();
 
+        // ------------------ 防止查看程式碼（防禦機製） ------------------
+        document.addEventListener('keydown', function (e) {
+            // 禁用 F12
+            if (e.key === 'F12') {
+                e.preventDefault();
+                return false;
+            }
+            // 禁用 Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C / Ctrl+U
+            if (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) {
+                e.preventDefault();
+                return false;
+            }
+            if (e.ctrlKey && e.key.toUpperCase() === 'U') {
+                e.preventDefault();
+                return false;
+            }
+        });
+
         let currentTab = 'send';
         let selectedFile = null;
         let peer = null;
@@ -251,7 +275,7 @@
         function log(message, type = 'info') {
             const box = document.getElementById('logBox');
             const time = new Date().toLocaleTimeString();
-            const color = type === 'error' ? 'text-rose-400' : (type === 'success' ? 'text-emerald-400' : 'text-slate-300');
+            const color = type === 'error' ? 'text-rose-400' : (type === 'success' ? 'text-blue-400' : 'text-slate-300');
             box.innerHTML += `<div class="${color}">[${time}] ${message}</div>`;
             box.scrollTop = box.scrollHeight;
         }
@@ -268,12 +292,12 @@
             const panelRecv = document.getElementById('panelRecv');
 
             if (tab === 'send') {
-                tabSend.className = "py-3.5 rounded-xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow-lg shadow-emerald-950/50 cursor-pointer";
+                tabSend.className = "py-3.5 rounded-xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-slate-950 shadow-lg shadow-blue-950/50 cursor-pointer";
                 tabRecv.className = "py-3.5 rounded-xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2.5 text-slate-400 hover:text-slate-200 cursor-pointer";
                 panelSend.classList.remove('hidden');
                 panelRecv.classList.add('hidden');
             } else {
-                tabRecv.className = "py-3.5 rounded-xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2.5 bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow-lg shadow-emerald-950/50 cursor-pointer";
+                tabRecv.className = "py-3.5 rounded-xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2.5 bg-gradient-to-r from-blue-500 to-cyan-500 text-slate-950 shadow-lg shadow-blue-950/50 cursor-pointer";
                 tabSend.className = "py-3.5 rounded-xl font-bold text-sm transition-all duration-300 flex items-center justify-center gap-2.5 text-slate-400 hover:text-slate-200 cursor-pointer";
                 panelRecv.classList.remove('hidden');
                 panelSend.classList.add('hidden');
@@ -283,11 +307,11 @@
         const fileInput = document.getElementById('fileInput');
         const dropZone = document.getElementById('dropZone');
 
-        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-emerald-500', 'bg-emerald-950/20'); });
-        dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('border-emerald-500', 'bg-emerald-950/20'); });
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-blue-500', 'bg-blue-950/20'); });
+        dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('border-blue-500', 'bg-blue-950/20'); });
         dropZone.addEventListener('drop', (e) => {
             e.preventDefault();
-            dropZone.classList.remove('border-emerald-500', 'bg-emerald-950/20');
+            dropZone.classList.remove('border-blue-500', 'bg-blue-950/20');
             if (e.dataTransfer.files.length > 0) {
                 setFile(e.dataTransfer.files[0]);
             }
@@ -373,8 +397,8 @@
         function updateConnectionStatus(status, text) {
             const badge = document.getElementById('connectionBadge');
             if (status === 'connected') {
-                badge.className = "px-3.5 py-1.5 rounded-full text-xs font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-2 shadow-sm";
-                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span> ${text}`;
+                badge.className = "px-3.5 py-1.5 rounded-full text-xs font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center gap-2 shadow-sm";
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-400"></span> ${text}`;
             } else if (status === 'waiting') {
                 badge.className = "px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center gap-2 shadow-sm";
                 badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span> ${text}`;
@@ -436,7 +460,7 @@
             });
         }
 
-        // 接收端邏輯（支援 1GB+ 檔案分塊記憶體組合，永不黑屏）
+        // 接收端邏輯（支援 1GB+ 檔案分塊記憶體組合）
         let incomingFileMeta = null;
         let incomingChunks = [];
         let receivedChunksCount = 0;
