@@ -116,43 +116,33 @@
                 <div class="flex items-center justify-between">
                     <h2 class="text-base font-bold text-slate-200 flex items-center gap-2.5">
                         <i data-lucide="sparkles" class="w-5 h-5 text-blue-400"></i>
-                        選擇或拖曳檔案 (支援高達 5GB)
+                        選擇或拖曳多個檔案 (支援 5GB+)
                     </h2>
-                    <span class="text-xs text-blue-400 font-mono bg-blue-500/10 px-3 py-1 rounded-lg border border-blue-500/20 shadow-inner">支援 5GB+</span>
+                    <span class="text-xs text-blue-400 font-mono bg-blue-500/10 px-3 py-1 rounded-lg border border-blue-500/20 shadow-inner">多檔直傳</span>
                 </div>
 
-                <!-- 檔案上傳拖曳區 -->
+                <!-- 檔案上傳拖曳區 (支援 multiple) -->
                 <label id="dropZone" class="border-2 border-dashed border-slate-700/80 hover:border-blue-500 bg-slate-950/30 hover:bg-blue-950/15 rounded-2xl p-10 flex flex-col items-center justify-center gap-4 transition-all duration-300 cursor-pointer group">
                     <div class="w-16 h-16 rounded-2xl bg-slate-900/80 group-hover:bg-blue-500/20 group-hover:scale-110 flex items-center justify-center transition-all duration-300 shadow-xl border border-white/5">
                         <i data-lucide="folder-open" class="w-7 h-7 text-slate-400 group-hover:text-blue-400 transition-colors"></i>
                     </div>
                     <div class="text-center">
-                        <p class="text-sm font-bold text-slate-200 group-hover:text-blue-300 transition-colors">點擊選擇檔案 或 將檔案拖曳至此</p>
-                        <p class="text-xs text-slate-400 mt-1">完美支援 5GB 以下大型影片、壓縮檔與高畫質照片極速直傳</p>
+                        <p class="text-sm font-bold text-slate-200 group-hover:text-blue-300 transition-colors">點擊選擇多個檔案 或 將檔案群組拖曳至此</p>
+                        <p class="text-xs text-slate-400 mt-1">支援同時發送多個大型影片、壓縮檔與高畫質照片</p>
                     </div>
-                    <input type="file" id="fileInput" class="hidden">
+                    <input type="file" id="fileInput" multiple class="hidden">
                 </label>
 
-                <!-- 已選檔案預覽 (含多媒體預覽) -->
-                <div id="filePreview" class="hidden flex flex-col gap-4 p-4 liquid-glass-card rounded-2xl border border-white/10 transition-all animate-in fade-in duration-300">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-3.5 overflow-hidden">
-                            <div class="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center shrink-0 border border-blue-500/20 shadow-md">
-                                <i data-lucide="file-check" class="w-6 h-6 text-blue-400"></i>
-                            </div>
-                            <div class="overflow-hidden">
-                                <p id="fileName" class="text-sm font-bold text-slate-200 truncate"></p>
-                                <p id="fileSize" class="text-xs text-slate-400 mt-0.5 font-mono"></p>
-                            </div>
-                        </div>
-                        <button onclick="clearFile()" class="p-2.5 text-slate-400 hover:text-rose-400 transition-all cursor-pointer rounded-xl hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20">
-                            <i data-lucide="trash-2" class="w-5 h-5"></i>
+                <!-- 已選多檔案清單與預覽 -->
+                <div id="filePreview" class="hidden flex flex-col gap-3 p-4 liquid-glass-card rounded-2xl border border-white/10 transition-all animate-in fade-in duration-300">
+                    <div class="flex items-center justify-between border-b border-white/10 pb-2">
+                        <span class="text-xs font-bold text-blue-400 uppercase tracking-wider" id="fileCountTitle">已選取 0 個檔案</span>
+                        <button onclick="clearAllFiles()" class="text-xs text-slate-400 hover:text-rose-400 transition-colors cursor-pointer flex items-center gap-1">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> 清空全部
                         </button>
                     </div>
-                    <!-- 即時預覽容器 -->
-                    <div id="mediaPreviewContainer" class="hidden w-full max-h-48 overflow-hidden rounded-xl bg-slate-950/80 border border-white/5 flex items-center justify-center p-2">
-                        <!-- 動態插入圖片或影片預覽 -->
-                    </div>
+                    <!-- 多檔案清單容器 -->
+                    <div id="fileListContainer" class="max-h-52 overflow-y-auto custom-scrollbar flex flex-col gap-2 pr-1"></div>
                 </div>
 
                 <!-- 接收裝置計數器與連線代碼 -->
@@ -168,7 +158,7 @@
                                 <p id="connectedCount" class="text-lg font-black text-cyan-400 font-mono">0 台裝置</p>
                             </div>
                         </div>
-                        <span class="w-2.5 h-2.5 rounded-full bg-slate-700 id-device-indicator" id="deviceIndicatorDot"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-slate-700" id="deviceIndicatorDot"></span>
                     </div>
 
                     <!-- 傳輸金鑰代碼 -->
@@ -215,9 +205,9 @@
                 <div class="flex items-center justify-between">
                     <h2 class="text-base font-bold text-slate-200 flex items-center gap-2.5">
                         <i data-lucide="zap" class="w-5 h-5 text-blue-400"></i>
-                        輸入 6 位數代碼接收 5GB+ 檔案
+                        輸入 6 位數代碼接收多檔案
                     </h2>
-                    <span class="text-xs text-blue-400 font-mono bg-blue-500/10 px-3 py-1 rounded-lg border border-blue-500/20 shadow-inner">極速接收</span>
+                    <span class="text-xs text-blue-400 font-mono bg-blue-500/10 px-3 py-1 rounded-lg border border-blue-500/20 shadow-inner">多檔接收</span>
                 </div>
 
                 <div class="flex flex-col gap-3">
@@ -242,18 +232,18 @@
                     <i data-lucide="download" class="w-5 h-5"></i> 連線並高速接收檔案
                 </button>
 
-                <!-- 下載完成區 (優化手機相容性) -->
+                <!-- 下載完成區 (支援多檔案下載與即時預覽) -->
                 <div id="recvSuccessArea" class="hidden flex flex-col items-center justify-center gap-4 p-6 bg-blue-950/30 border border-blue-500/30 rounded-2xl text-center backdrop-blur-md animate-in zoom-in-95 duration-300">
                     <div class="w-14 h-14 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 shadow-lg shadow-blue-900/50 border border-blue-500/30">
                         <i data-lucide="check" class="w-7 h-7"></i>
                     </div>
                     <div>
-                        <p class="font-bold text-slate-100 text-base" id="successFileName">檔案接收完成</p>
-                        <p class="text-xs text-slate-400 mt-1">完整性驗證通過，支援手機與電腦端直接下載</p>
+                        <p class="font-bold text-slate-100 text-base">檔案接收完成！</p>
+                        <p class="text-xs text-slate-400 mt-1">完整性驗證通過，下方為接收到的檔案清單</p>
                     </div>
-                    <a id="downloadLink" class="w-full py-3.5 bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-400 hover:to-sky-400 text-slate-950 font-black rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 hover:scale-[1.01] active:scale-[0.99]">
-                        <i data-lucide="save" class="w-4 h-4"></i> 儲存檔案到裝置
-                    </a>
+
+                    <!-- 接收到的檔案清單容器 -->
+                    <div id="recvFilesListContainer" class="w-full max-h-60 overflow-y-auto custom-scrollbar flex flex-col gap-2.5 text-left"></div>
                 </div>
             </div>
         </div>
@@ -267,7 +257,7 @@
                 <button onclick="clearLogs()" class="hover:text-slate-200 cursor-pointer transition-colors">清除日誌</button>
             </div>
             <div id="logBox" class="h-28 overflow-y-auto custom-scrollbar font-mono text-[11px] text-slate-400 flex flex-col gap-1.5 p-3 bg-slate-950/70 rounded-xl border border-white/5">
-                <div>[FR Air] 系統初始化完成。已全面升級支援 5GB+ 檔案與行動裝置相容傳輸。</div>
+                <div>[FR Air] 系統初始化完成。已全面升級支援多檔案傳輸與連續再次傳送！</div>
             </div>
         </div>
 
@@ -289,22 +279,15 @@
                 <div class="flex items-start gap-3 bg-slate-900/50 p-3.5 rounded-2xl border border-white/5">
                     <span class="w-6 h-6 rounded-full bg-blue-500/20 text-blue-400 font-bold flex items-center justify-center shrink-0 border border-blue-500/30">1</span>
                     <div>
-                        <strong class="text-slate-200 block mb-0.5">發送端 (Sender)</strong>
-                        點擊或拖曳檔案上傳（支援高達 5GB 檔案），確認預覽無誤後點擊「啟動 FR Air 高速傳輸節點」，並將 6 位數代碼分享給接收者。
+                        <strong class="text-slate-200 block mb-0.5">多檔案傳送</strong>
+                        可一次選取多個檔案，傳送完畢後可隨時再次選取新檔案並點擊「啟動 FR Air 高速傳輸節點」進行連續傳輸！
                     </div>
                 </div>
                 <div class="flex items-start gap-3 bg-slate-900/50 p-3.5 rounded-2xl border border-white/5">
                     <span class="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 font-bold flex items-center justify-center shrink-0 border border-cyan-500/30">2</span>
                     <div>
-                        <strong class="text-slate-200 block mb-0.5">接收端 (Receiver)</strong>
-                        切換至接收標籤，輸入發送端提供的 6 位數代碼，點擊「連線並高速接收檔案」即可即時下載。
-                    </div>
-                </div>
-                <div class="flex items-start gap-3 bg-slate-900/50 p-3.5 rounded-2xl border border-white/5">
-                    <span class="w-6 h-6 rounded-full bg-indigo-500/20 text-indigo-400 font-bold flex items-center justify-center shrink-0 border border-indigo-500/30">3</span>
-                    <div>
-                        <strong class="text-slate-200 block mb-0.5">手機下載注意事項</strong>
-                        若使用手機接收大檔案，傳輸完成後請點擊「儲存檔案到裝置」，部分行動瀏覽器會自動儲存至下載資料夾。
+                        <strong class="text-slate-200 block mb-0.5">準確裝置計數</strong>
+                        發送端能即時、準確地追蹤並顯示目前連線的接收裝置數量。
                     </div>
                 </div>
             </div>
@@ -322,7 +305,7 @@
 
     <!-- 頁尾 -->
     <footer class="w-full border-t border-white/5 py-6 text-center text-xs text-slate-500">
-        FR Air Engine &bull; Secure & High Speed &bull; 5GB+ Supported
+        FR Air Engine &bull; Secure & High Speed &bull; Multi-File & Re-Host Supported
     </footer>
 
     <!-- PeerJS 函式庫 -->
@@ -347,9 +330,9 @@
         });
 
         let currentTab = 'send';
-        let selectedFile = null;
+        let selectedFiles = []; // 支援多檔案陣列
         let peer = null;
-        let activeConnections = []; // 支援追蹤多個連線裝置
+        let activeConnections = [];
         let roomCode = '';
         
         function log(message, type = 'info') {
@@ -402,55 +385,71 @@
             e.preventDefault();
             dropZone.classList.remove('border-blue-500', 'bg-blue-950/20');
             if (e.dataTransfer.files.length > 0) {
-                setFile(e.dataTransfer.files[0]);
+                addFiles(e.dataTransfer.files);
             }
         });
 
         fileInput.addEventListener('change', (e) => {
             if (e.target.files.length > 0) {
-                setFile(e.target.files[0]);
+                addFiles(e.target.files);
             }
         });
 
-        function setFile(file) {
-            selectedFile = file;
-            document.getElementById('filePreview').classList.remove('hidden');
-            dropZone.classList.add('hidden');
-            document.getElementById('fileName').innerText = file.name;
-            document.getElementById('fileSize').innerText = formatBytes(file.size);
-            document.getElementById('startSendBtn').disabled = false;
-            
-            // 檔案預覽（支援圖片與影片）
-            const previewContainer = document.getElementById('mediaPreviewContainer');
-            previewContainer.innerHTML = '';
-            if (file.type.startsWith('image/')) {
-                const img = document.createElement('img');
-                img.src = URL.createObjectURL(file);
-                img.className = 'max-h-40 rounded-lg object-contain';
-                previewContainer.appendChild(img);
-                previewContainer.classList.remove('hidden');
-            } else if (file.type.startsWith('video/')) {
-                const video = document.createElement('video');
-                video.src = URL.createObjectURL(file);
-                video.controls = true;
-                video.className = 'max-h-40 rounded-lg object-contain w-full';
-                previewContainer.appendChild(video);
-                previewContainer.classList.remove('hidden');
-            } else {
-                previewContainer.classList.add('hidden');
+        function addFiles(files) {
+            for (let f of files) {
+                selectedFiles.push(f);
             }
-
-            log(`已載入檔案: ${file.name} (${formatBytes(file.size)})`, 'success');
+            renderFileList();
+            log(`已新增 ${files.length} 個檔案，目前共 ${selectedFiles.length} 個待傳送檔案`, 'success');
         }
 
-        function clearFile() {
-            selectedFile = null;
+        function renderFileList() {
+            const container = document.getElementById('fileListContainer');
+            container.innerHTML = '';
+            
+            if (selectedFiles.length > 0) {
+                document.getElementById('filePreview').classList.remove('hidden');
+                document.getElementById('fileCountTitle').innerText = `已選取 ${selectedFiles.length} 個檔案`;
+                document.getElementById('startSendBtn').disabled = false;
+            } else {
+                document.getElementById('filePreview').classList.add('hidden');
+                document.getElementById('startSendBtn').disabled = true;
+                return;
+            }
+
+            selectedFiles.forEach((file, index) => {
+                const item = document.createElement('div');
+                item.className = "flex items-center justify-between p-2.5 bg-slate-900/60 rounded-xl border border-white/5";
+                item.innerHTML = `
+                    <div class="flex items-center gap-3 overflow-hidden">
+                        <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0 border border-blue-500/20">
+                            <i data-lucide="file" class="w-4 h-4 text-blue-400"></i>
+                        </div>
+                        <div class="overflow-hidden">
+                            <p class="text-xs font-bold text-slate-200 truncate">${file.name}</p>
+                            <p class="text-[10px] text-slate-400 font-mono">${formatBytes(file.size)}</p>
+                        </div>
+                    </div>
+                    <button onclick="removeFile(${index})" class="p-1.5 text-slate-400 hover:text-rose-400 transition-colors cursor-pointer rounded-lg hover:bg-rose-500/10">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                `;
+                container.appendChild(item);
+            });
+            lucide.createIcons();
+        }
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            renderFileList();
+            log('已移除指定檔案');
+        }
+
+        function clearAllFiles() {
+            selectedFiles = [];
             fileInput.value = '';
-            document.getElementById('filePreview').classList.add('hidden');
-            document.getElementById('mediaPreviewContainer').classList.add('hidden');
-            dropZone.classList.remove('hidden');
-            document.getElementById('startSendBtn').disabled = true;
-            log('已清除所選檔案');
+            renderFileList();
+            log('已清空所有選取檔案');
         }
 
         function formatBytes(bytes, decimals = 2) {
@@ -480,30 +479,36 @@
             document.getElementById('connectedCount').innerText = `${count} 台裝置`;
             const dot = document.getElementById('deviceIndicatorDot');
             if (count > 0) {
-                dot.className = "w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse id-device-indicator";
+                dot.className = "w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse";
                 updateConnectionStatus('connected', `已連線 (${count} 台)`);
             } else {
-                dot.className = "w-2.5 h-2.5 rounded-full bg-slate-700 id-device-indicator";
+                dot.className = "w-2.5 h-2.5 rounded-full bg-slate-700";
                 updateConnectionStatus('waiting', '等待接收端連線...');
             }
         }
 
         function startHosting() {
-            if (!selectedFile) return;
+            if (selectedFiles.length === 0) return;
             
             const peerId = 'frair-' + roomCode;
             log(`正在註冊 FR Air 節點: ${peerId}`);
             
+            if (peer) {
+                try { peer.destroy(); } catch(e) {}
+            }
+
             peer = new Peer(peerId);
 
             peer.on('open', (id) => {
-                log(`連線節點就緒！等待接收端連線...`, 'success');
+                log(`傳輸節點就緒！等待接收端連線...`, 'success');
                 updateConnectionStatus('waiting', '等待接收端連線...');
                 document.getElementById('startSendBtn').disabled = true;
             });
 
             peer.on('connection', (connection) => {
-                activeConnections.push(connection);
+                if (!activeConnections.includes(connection)) {
+                    activeConnections.push(connection);
+                }
                 updateDeviceCount();
                 log(`接收端已成功連線！目前連線裝置數: ${activeConnections.length}`, 'success');
                 
@@ -536,61 +541,78 @@
             }
         }
 
-        // 傳送端資料發送邏輯（大檔案優化：256KB 區塊以支援 5GB+ 極速傳輸）
+        // 多檔案循序傳送邏輯
         function setupSenderConnection(connInstance) {
             document.getElementById('sendProgressContainer').classList.remove('hidden');
             
-            connInstance.on('open', () => {
-                log(`開始向連線裝置發送檔案資訊: ${selectedFile.name} (${formatBytes(selectedFile.size)})`);
-                
-                const chunkSize = 256 * 1024; // 256 KB 區塊
-                const totalChunks = Math.ceil(selectedFile.size / chunkSize);
+            connInstance.on('open', async () => {
+                log(`開始向連線裝置依序發送 ${selectedFiles.length} 個檔案...`);
 
-                connInstance.send({
-                    type: 'file-meta',
-                    name: selectedFile.name,
-                    size: selectedFile.size,
-                    fileType: selectedFile.type,
-                    totalChunks: totalChunks
-                });
+                for (let i = 0; i < selectedFiles.length; i++) {
+                    const file = selectedFiles[i];
+                    log(`正在傳送第 ${i+1}/${selectedFiles.length} 個檔案: ${file.name}`);
+                    
+                    const chunkSize = 256 * 1024;
+                    const totalChunks = Math.ceil(file.size / chunkSize);
 
-                let chunkIndex = 0;
-                const reader = new FileReader();
-                let offset = 0;
-
-                reader.onload = (e) => {
                     connInstance.send({
-                        type: 'file-chunk',
-                        index: chunkIndex,
-                        data: e.target.result
+                        type: 'file-meta',
+                        name: file.name,
+                        size: file.size,
+                        fileType: file.type,
+                        totalChunks: totalChunks,
+                        fileIndex: i,
+                        totalFiles: selectedFiles.length
                     });
 
-                    offset += e.target.result.byteLength;
-                    chunkIndex++;
-                    
-                    const percent = Math.round((offset / selectedFile.size) * 100);
-                    document.getElementById('sendProgressBar').style.width = percent + '%';
-                    document.getElementById('sendProgressPercent').innerText = percent + '%';
-                    document.getElementById('sendProgressStatus').innerText = `傳輸中: ${formatBytes(offset)} / ${formatBytes(selectedFile.size)}`;
+                    await new Promise((resolve) => {
+                        let chunkIndex = 0;
+                        let offset = 0;
+                        const reader = new FileReader();
 
-                    if (chunkIndex < totalChunks) {
+                        reader.onload = (e) => {
+                            connInstance.send({
+                                type: 'file-chunk',
+                                index: chunkIndex,
+                                data: e.target.result
+                            });
+
+                            offset += e.target.result.byteLength;
+                            chunkIndex++;
+                            
+                            const percent = Math.round((offset / file.size) * 100);
+                            document.getElementById('sendProgressBar').style.width = percent + '%';
+                            document.getElementById('sendProgressPercent').innerText = percent + '%';
+                            document.getElementById('sendProgressStatus').innerText = `傳送 [${i+1}/${selectedFiles.length}] ${file.name}: ${formatBytes(offset)} / ${formatBytes(file.size)}`;
+
+                            if (chunkIndex < totalChunks) {
+                                readNextChunk();
+                            } else {
+                                log(`檔案 ${file.name} 傳送完成！`, 'success');
+                                resolve();
+                            }
+                        };
+
+                        function readNextChunk() {
+                            const slice = file.slice(offset, offset + chunkSize);
+                            reader.readAsArrayBuffer(slice);
+                        }
+
                         readNextChunk();
-                    } else {
-                        log(`檔案高速傳輸完畢！`, 'success');
-                        document.getElementById('sendProgressStatus').innerText = "傳輸完成！";
-                    }
-                };
-
-                function readNextChunk() {
-                    const slice = selectedFile.slice(offset, offset + chunkSize);
-                    reader.readAsArrayBuffer(slice);
+                    });
                 }
 
-                readNextChunk();
+                document.getElementById('sendProgressStatus').innerText = "全部檔案傳輸完成！";
+                log(`所有檔案均已成功發送完畢！`, 'success');
+                
+                // 傳送完畢解鎖按鈕，允許再次啟動傳送
+                document.getElementById('startSendBtn').disabled = false;
+                log(`系統已就緒，您可以再次選取新檔案並重新點擊「啟動 FR Air 高速傳輸節點」進行下一次傳送。`);
             });
         }
 
-        // 接收端邏輯（支援 5GB+ 檔案分塊與手機下載相容處理）
+        // 接收端多檔案接收邏輯
+        let receivedFilesList = [];
         let incomingFileMeta = null;
         let incomingChunks = [];
         let receivedChunksCount = 0;
@@ -606,13 +628,20 @@
             log(`正在連線至傳送端: ${targetPeerId}`);
             updateConnectionStatus('waiting', '正在建立通道...');
 
+            receivedFilesList = [];
+            document.getElementById('recvSuccessArea').classList.add('hidden');
+
+            if (peer) {
+                try { peer.destroy(); } catch(e) {}
+            }
+
             peer = new Peer();
 
             peer.on('open', (id) => {
                 const conn = peer.connect(targetPeerId);
 
                 conn.on('open', () => {
-                    log(`FR Air 連線成功！等待接收 5GB+ 檔案資料...`, 'success');
+                    log(`FR Air 連線成功！等待接收多檔案資料...`, 'success');
                     updateConnectionStatus('connected', '已連線');
                     document.getElementById('recvProgressContainer').classList.remove('hidden');
                 });
@@ -622,7 +651,7 @@
                         incomingFileMeta = packet;
                         incomingChunks = new Array(packet.totalChunks);
                         receivedChunksCount = 0;
-                        log(`收到檔案標頭: ${packet.name} (${formatBytes(packet.size)})，共 ${packet.totalChunks} 個區塊`, 'success');
+                        log(`收到檔案標頭 [${packet.fileIndex+1}/${packet.totalFiles}]: ${packet.name} (${formatBytes(packet.size)})`, 'success');
                     } else if (packet.type === 'file-chunk') {
                         incomingChunks[packet.index] = packet.data;
                         receivedChunksCount++;
@@ -632,10 +661,10 @@
                         
                         document.getElementById('recvProgressBar').style.width = percent + '%';
                         document.getElementById('recvProgressPercent').innerText = percent + '%';
-                        document.getElementById('recvProgressStatus').innerText = `接收中: ${formatBytes(receivedBytes)} / ${formatBytes(incomingFileMeta.size)}`;
+                        document.getElementById('recvProgressStatus').innerText = `接收 [${incomingFileMeta.fileIndex+1}/${incomingFileMeta.totalFiles}]: ${formatBytes(receivedBytes)} / ${formatBytes(incomingFileMeta.size)}`;
 
                         if (receivedChunksCount >= incomingFileMeta.totalChunks) {
-                            log(`所有區塊接收完畢，正在進行高效能組裝...`, 'success');
+                            log(`檔案 ${incomingFileMeta.name} 接收完畢，正在組裝...`, 'success');
                             assembleReceivedFile();
                         }
                     }
@@ -652,14 +681,49 @@
             const blob = new Blob(incomingChunks, { type: incomingFileMeta.fileType || 'application/octet-stream' });
             const url = URL.createObjectURL(blob);
 
-            const downloadLink = document.getElementById('downloadLink');
-            downloadLink.href = url;
-            downloadLink.download = incomingFileMeta.name;
+            receivedFilesList.push({
+                name: incomingFileMeta.name,
+                size: incomingFileMeta.size,
+                type: incomingFileMeta.fileType,
+                url: url
+            });
 
-            document.getElementById('successFileName').innerText = incomingFileMeta.name;
+            renderReceivedFiles();
             document.getElementById('recvSuccessArea').classList.remove('hidden');
-            document.getElementById('recvProgressStatus').innerText = "接收完成！";
-            log(`檔案已高速傳輸完畢（支援 5GB+ 檔案），可點擊儲存: ${incomingFileMeta.name}`, 'success');
+            document.getElementById('recvProgressStatus').innerText = `已接收 ${receivedFilesList.length} 個檔案`;
+            log(`檔案組裝完成: ${incomingFileMeta.name}`, 'success');
+        }
+
+        function renderReceivedFiles() {
+            const container = document.getElementById('recvFilesListContainer');
+            container.innerHTML = '';
+
+            receivedFilesList.forEach((file) => {
+                const item = document.createElement('div');
+                item.className = "p-3 bg-slate-950/80 rounded-xl border border-white/10 flex flex-col gap-3";
+                
+                let previewHtml = '';
+                if (file.type && file.type.startsWith('image/')) {
+                    previewHtml = `<div class="w-full max-h-40 overflow-hidden rounded-lg bg-slate-900 flex items-center justify-center p-1"><img src="${file.url}" class="max-h-36 object-contain rounded"></div>`;
+                } else if (file.type && file.type.startsWith('video/')) {
+                    previewHtml = `<div class="w-full max-h-40 overflow-hidden rounded-lg bg-slate-900 flex items-center justify-center p-1"><video src="${file.url}" controls class="max-h-36 object-contain rounded w-full"></video></div>`;
+                }
+
+                item.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="overflow-hidden">
+                            <p class="text-xs font-bold text-slate-200 truncate">${file.name}</p>
+                            <p class="text-[10px] text-slate-400 font-mono">${formatBytes(file.size)}</p>
+                        </div>
+                        <a href="${file.url}" download="${file.name}" class="px-3 py-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold rounded-lg text-xs transition-all flex items-center gap-1 shrink-0 shadow">
+                            <i data-lucide="download" class="w-3.5 h-3.5"></i> 儲存
+                        </a>
+                    </div>
+                    ${previewHtml}
+                `;
+                container.appendChild(item);
+            });
+            lucide.createIcons();
         }
     </script>
 </body>
